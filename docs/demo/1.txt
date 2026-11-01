@@ -1,0 +1,5 @@
+  channel        sku       rule            severity  message                                             
+  -------------  --------  --------------  --------  ----------------------------------------------------
+  Koru Shopping  BOTTLE-1  STOCK_CONFLICT  error     Zero quantity contradicts in-stock availability     
+  Koru Shopping  MAT-1     TITLE           error     Title is missing or exceeds 150 characters          
+  Koru Shopping  MAT-1     IMAGE           error     Image link must be an absolute HTTP or HTTPS address

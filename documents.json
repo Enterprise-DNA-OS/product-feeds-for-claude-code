@@ -1,11 +1,67 @@
 [
   {
-    "name": "example",
-    "title": "TODO(author): the first document this industry must produce",
-    "for_each": "select gen_random_uuid() as id, 'Example' as name",
+    "name": "source-review",
+    "title": "Source catalogue review",
+    "for_each": "select id,code from feed.shops",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Shop",
+        "layout": "record",
+        "sql": "select code,name,country,currency,owner from feed.shops where id=$1"
+      },
+      {
+        "title": "Freshness",
+        "sql": "select products,stale_products,oldest_observation from feed.source_health where shop_id=$1"
+      },
+      {
+        "title": "Products",
+        "sql": "select sku,title,price,currency,availability,quantity,observed_at from feed.products where shop_id=$1 and not archived order by sku",
+        "note": "Fictional values in the demo. Product prices are not software subscription prices."
+      },
+      {
+        "title": "Outstanding work",
+        "sql": "select title,owner,due,overdue from feed.open_tasks where shop_id=$1 order by due"
+      }
+    ]
+  },
+  {
+    "name": "release-review",
+    "title": "Feed release review",
+    "for_each": "select id,name from feed.channels",
     "file": "name",
     "sections": [
-      { "title": "Details", "sql": "select 'replace me' as item, $1::text as record_id" }
+      {
+        "title": "Channel",
+        "layout": "record",
+        "sql": "select name,format,owner from feed.channels where id=$1"
+      },
+      {
+        "title": "Saved runs",
+        "sql": "select r.id,r.counts,r.actor prepared_by,r.created_at,a.actor reviewed_by,a.note from feed.runs r left join feed.approvals a on a.run_id=r.id where r.channel_id=$1 order by r.created_at desc",
+        "note": "An approval records a named reviewer assertion. It is not a signature or a channel acceptance receipt."
+      },
+      {
+        "title": "Current rules",
+        "sql": "select name,priority,field,operator,match_value,action,target_field,value,enabled from feed.rules where channel_id=$1 order by priority"
+      }
+    ]
+  },
+  {
+    "name": "fix-list",
+    "title": "Catalogue correction list",
+    "for_each": "select id,code from feed.shops",
+    "file": "code",
+    "sections": [
+      {
+        "title": "Open corrections",
+        "sql": "select title,owner,due,overdue from feed.open_tasks where shop_id=$1 order by due"
+      },
+      {
+        "title": "Stock exceptions",
+        "sql": "select p.sku,p.title,p.availability,p.quantity from feed.products p where p.shop_id=$1 and not p.archived and (p.quantity=0 or p.availability='out_of_stock') order by sku",
+        "note": "Run the feed check for missing titles, invalid identifiers and export requirements."
+      }
     ]
   }
 ]

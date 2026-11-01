@@ -1,115 +1,94 @@
-<h1 align="center">Product Feeds for Claude Code</h1>
+# Product Feeds for Claude Code
 
-<p align="center">
-  <strong>The open-source product feed system that is just a database and Claude Code.</strong>
-</p>
+Find the stock conflicts, missing fields and old source records before a product feed leaves the business. Keep the rules and review history in a database you own.
 
-<p align="center">
-  Created by <a href="https://www.enterprisedna.co"><strong>Enterprise DNA</strong></a>. Free and open source. Works with Claude Code, Codex, OpenCode or Cursor.
-</p>
+| Do it yourself | We customise it | We run it for you |
+|---|---|---|
+| Free, MIT licensed. Run the fictional catalogues locally. | Your source mappings, channel requirements, exception rules and review documents. | Installed and operated through Omni by Enterprise DNA. One setup fee, then a retainer. |
+| [Quick start](#quick-start) | [Get your version built](https://enterprisedna.co/omni/book?offer=replace-software&utm_campaign=datafeedwatch&utm_medium=customise) | [Book a call](https://enterprisedna.co/omni/book?offer=replace-software&utm_campaign=datafeedwatch&utm_medium=managed) |
 
-<!-- three-doors -->
-<table align="center">
-  <tr>
-    <td align="center"><strong>Do it yourself</strong><br/>Clone it, run it, own it. Free, MIT.<br/><a href="#quick-start">Quick start</a></td>
-    <td align="center"><strong>We customise it</strong><br/>Your fields, your rules, your DataFeedWatch data brought across.<br/><a href="https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=datafeedwatch">Book a call</a></td>
-    <td align="center"><strong>We run it for you</strong><br/>Installed, connected and operated inside Omni. Setup fee, then a retainer.<br/><a href="https://enterprisedna.co/omni/instead-of/datafeedwatch?utm_source=github&utm_medium=readme&utm_campaign=datafeedwatch">How it works</a></td>
-  </tr>
-</table>
-
-<p align="center">
-  <a href="#what-is-this">What is this</a> &bull;
-  <a href="#why-no-front-end">Why no front end</a> &bull;
-  <a href="#quick-start">Quick start</a> &bull;
-  <a href="#the-commands">Commands</a> &bull;
-  <a href="#instead-of-datafeedwatch">Instead of DataFeedWatch</a> &bull;
-  <a href="#want-it-installed-and-run-for-you">Installed for you</a> &bull;
-  <a href="#license">License</a>
-</p>
-
-<p align="center">
-  <img src="https://img.shields.io/badge/Node-20+-339933?style=flat-square" alt="Node 20+" />
-  <img src="https://img.shields.io/badge/PostgreSQL-any-336791?style=flat-square" alt="PostgreSQL" />
-  <img src="https://img.shields.io/badge/PGlite-embedded-3ecf8e?style=flat-square" alt="PGlite" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" alt="MIT License" />
-</p>
-
----
-
-## What is this
-
-Product Feeds for Claude Code does the job you pay DataFeedWatch for, as a Postgres database and a set of agent commands. There is no web front end. You open the folder in [Claude Code](https://claude.com/claude-code) (or Codex, OpenCode, Cursor: see `AGENTS.md`) and ask for what you want in plain language. It runs the right query, and it can answer questions the DataFeedWatch dashboard cannot.
-
-<!-- TODO(author): the annual bill. One sentence: what a 10 to 50 person business typically pays DataFeedWatch per year, all in, with a source. -->
-
-Want the same thing with a web front end, or built on a different stack? That is a customisation, and it is exactly what Enterprise DNA does: [book a call](https://enterprisedna.co/omni/book/?utm_source=github&utm_medium=readme&utm_campaign=datafeedwatch).
-
-<!-- TODO(author): two or three sentences on what this specific product covers and who it is for. -->
-
-## Why no front end
-
-- The front end was only ever there because the database was hard to talk to. That is no longer true.
-- Your data sits in plain Postgres tables you own. Any tool can read them. No export, no lock-in.
-- No seats, no tiers, no add-ons. Read [docs/why-no-front-end.md](docs/why-no-front-end.md) for the honest trade-offs too.
+For retail catalogue teams and the agencies that maintain their product feeds. Runs with Claude Code, Codex, OpenCode or Cursor. The free base prepares and reviews local product feeds. DataFeedWatch also operates live integrations, channel delivery and managed services. Scope your replacement against the work you actually use. [Research](docs/research.md).
 
 ## Quick start
 
-Sixty seconds, no database install (an embedded Postgres runs inside Node):
+Node 20 or later, Windows or Linux:
 
 ```bash
 git clone https://github.com/Enterprise-DNA-OS/product-feeds-for-claude-code.git
 cd product-feeds-for-claude-code
 npm install
 npm run demo
+npm test
+npm run view
+npm run docs
 ```
 
-Then open the folder in Claude Code and type a slash command. <!-- TODO(author): name the first command to try. -->
+The demo contains two fictional shops, separate NZD and AUD catalogues, an in-stock bottle with zero quantity, an excluded tent, an incomplete mat, old Australian source data and an overdue correction. Repeating the seed preserves changes. PGlite stores data under .data/db. DATABASE_URL selects Postgres. Use a fresh DATA_DIR or database for business records, run migrate, register the shops and import. Never seed a business database.
 
-### Use it with your own Postgres or Supabase
+## Five weekly jobs
 
-Copy `.env.example` to `.env`, set `DATABASE_URL`, then `npm run migrate`. Same commands, shared data, no per-seat fee.
+1. /feed-check: find the records that block the next feed.
+2. /stock-watch: check sold-out products and contradictory availability.
+3. /exclusion-review: read why each product was held out.
+4. /stale-inputs: find catalogues whose observation times are too old.
+5. /weekly-review: combine source health, stock, corrections and prepared releases.
 
-## The commands
+32 CLI commands and 34 slash recipes ship with the project. Every CLI command accepts --json. [Arguments and examples](docs/cli.md).
 
-<!-- TODO(author): a table of the slash commands in .claude/commands and what each one does. -->
+## Ten questions answered today
 
-| Command | What it does |
+DataFeedWatch has configurable rules and feed review. These are demonstrated questions in this build, not a claim that the incumbent cannot answer them.
+
+| Question | Command |
 |---|---|
-| `/...` | ... |
+| Which products have zero quantity but say they are in stock? | stock-watch |
+| Which shop has stale source observations? | stale-inputs |
+| Why was a product removed from this channel? | exclusion-review |
+| Which records block the next feed file? | feed-check |
+| Which product fields fail the supported channel checks? | compliance |
+| Which correction is overdue, and who owns it? | tasks |
+| What changed since the previous reviewed feed? | run-change |
+| Who reviewed each saved feed run? | runs |
+| Which source values changed during an import? | history |
+| What did the source file say about this product? | product |
 
-## Instead of DataFeedWatch
+## Bring the catalogue
 
-<!-- TODO(author): how to bring data across from DataFeedWatch; link docs/replace-datafeedwatch.md -->
+Download the source products from DataFeedWatch as CSV. Headings follow your source shop, so map the file once when needed. [Switching guide](docs/replace-datafeedwatch.md).
 
-## Architecture
-
+```bash
+npm run feeds -- import datafeedwatch --shop=KORU --file=fixtures/datafeedwatch-example.csv --observed-at=2026-11-01T00:00:00Z --dry-run --actor="Demo operator"
 ```
-product-feeds-for-claude-code/
-  CLAUDE.md                 how the operator wants this run (routing table + house rules)
-  AGENTS.md                 the same, for Codex / OpenCode / Cursor / Gemini CLI
-  .claude/commands/         the slash commands
-  scripts/                  the CLI the commands drive
-  scripts/lib/db.mjs        one adapter: DATABASE_URL (pg) or embedded PGlite
-  supabase/migrations/      plain SQL schema
-  supabase/seed.sql         demo data
-  docs/                     the thesis and the migration guide
-```
 
-## Built for coding agents
+The timestamp above is a demo example. For business records, use the real source observation time. Preview first, reconcile counts and currencies, then repeat without --dry-run. Replayed observations are unchanged; newer source data updates matching shop and SKU records with before/after history. Duplicate identifiers and malformed values reject the whole file. Missing rows never delete existing products.
 
-The database, CLI and command recipes work with Claude Code, Codex, OpenCode or Cursor. Ask your coding agent for a new command and have it implement and test the change against the same records.
+## Review before a file leaves
 
-## Contributing
+Compile saves the prepared items, rule trace, findings and source fingerprint. Approve refuses errors, an empty feed or a changed source. Export-feed requires a current approval and writes only a local file. Subsequent source or rule changes and expired freshness invalidate the release. Nothing uploads or buys ads. Operator names are labels, not authenticated signatures. Reviewers must also inspect excluded counts.
 
-Issues and pull requests are welcome. Keep the shape: plain SQL, a small CLI, a slash command per recurring job, no front end.
+The base targets general physical goods in NZ and AU. Apparel, preorder and backorder products are blocked for extra fields. Shipping, tax, returns, manufacturer identifier assignment, image quality and parity with the store require human checks. The source checks do not prove that Google will accept an item. [Checks and sources](docs/compliance.md).
 
-## Want it installed and run for you?
+## Your first hour: ten things to ask for
 
-Enterprise DNA installs Product Feeds for Claude Code for your business, migrates your DataFeedWatch data, connects it to the rest of your tools, and runs it for you as part of **Omni**, our managed Command Center. One setup fee, then a monthly retainer.
+1. Put our name and logo on the catalogue review.
+2. Explain why the bottle is blocked.
+3. List the records missing an image or title.
+4. Show the Australian catalogue separately.
+5. Explain why the tent is excluded.
+6. Draft the weekly review without sending it.
+7. Assign the stock correction to its owner.
+8. Map our source column names and preview the import.
+9. Add our seasonal review field through /customise.
+10. Add a channel-owner view through /new-view.
 
-- Book a call: [enterprisedna.co/omni/book](https://enterprisedna.co/omni/book/?offer=replace-software&utm_source=github&utm_medium=readme&utm_campaign=datafeedwatch)
-- Read more: [enterprisedna.co/omni/instead-of/datafeedwatch](https://enterprisedna.co/omni/instead-of/datafeedwatch?utm_source=github&utm_medium=readme&utm_campaign=datafeedwatch)
+## Documents and views
 
-## License
+npm run docs produces source catalogue reviews, feed release reviews and correction lists as branded HTML. npm run view produces the weekly desk and rule register. Change brand.json for your business name, colours and logo. Reports are read-only files you can print to PDF. [What a screen adds](docs/why-no-front-end.md).
 
-MIT. Copyright (c) 2026 Enterprise DNA.
+## Tests and operation
+
+npm test uses a temporary database and exercises every command, import rollback and replay, currency separation, ambiguous selectors, rule changes, review expiry, immutable evidence, CSV quoting and escaped HTML. TEST_DATABASE_URL points at a fresh disposable Postgres database. The manual CI workflow checks Windows, Linux and Postgres. See docs/verification.md for environments actually tested.
+
+Import files, local databases, feed files, snapshots and draft documents are ignored by Git. Keep their access private. Back up the database and source files separately. Shared use requires authenticated roles and tested recovery. Public database access is revoked. Export contains all nine record sets and is not a restore utility.
+
+MIT licensed. Not affiliated with DataFeedWatch, Cart.com, Google or Anthropic. Hosting and agent subscriptions have separate costs. [Book 30 minutes with Sam](https://enterprisedna.co/omni/book?offer=replace-software&utm_campaign=datafeedwatch&utm_medium=readme).

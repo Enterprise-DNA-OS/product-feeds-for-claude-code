@@ -1,13 +1,40 @@
 [
   {
     "name": "week",
-    "title": "This week",
-    "subtitle": "Product Feeds for Claude Code: what needs attention, rendered by npm run view",
+    "title": "Product feed week",
+    "subtitle": "Source freshness, stock exceptions and the work still owed",
     "sections": [
       {
-        "title": "Needs attention",
-        "note": "TODO(author): point this at the industry's attention view (overdue, stuck, quiet).",
-        "sql": "select 'replace me' as item, 'TODO(author)' as why"
+        "title": "Shops",
+        "sql": "select code,name,country,currency,owner from feed.shops order by code"
+      },
+      {
+        "title": "Source freshness",
+        "sql": "select shop,owner,products,stale_products,oldest_observation from feed.source_health order by shop",
+        "note": "Freshness follows each shop policy. An import date is not evidence of a fresh stock observation."
+      },
+      {
+        "title": "Stock review",
+        "sql": "select shop,sku,title,availability,quantity,reason from feed.stock_watch order by shop,sku"
+      },
+      {
+        "title": "Open work",
+        "sql": "select shop,title,owner,due,overdue from feed.open_tasks order by due"
+      },
+      {
+        "title": "Release history",
+        "sql": "select channel,shop,counts,prepared_by,reviewed_by,created_at from feed.release_register order by created_at desc"
+      }
+    ]
+  },
+  {
+    "name": "rules",
+    "title": "Channel rules",
+    "sections": [
+      {
+        "title": "Ordered transformations",
+        "sql": "select c.name channel,r.priority,r.name,r.field,r.operator,r.match_value,r.action,r.target_field,r.value,r.enabled from feed.rules r join feed.channels c on c.id=r.channel_id order by c.name,r.priority",
+        "note": "Rules run in priority order. Exclusion stops processing that product. Prices and stock cannot be altered by a rule."
       }
     ]
   }

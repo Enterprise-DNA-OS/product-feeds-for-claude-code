@@ -1,0 +1,2 @@
+id,title,description,price,availability,link,image_link,brand,mpn,identifier_exists,product_type,quantity
+NEW-PACK,"Weekend pack, 30L","A pack for overnight trips.",129.00 NZD,in_stock,https://example.com/new-pack,https://example.com/new-pack.jpg,Koru,WP30,yes,Packs,6

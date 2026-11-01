@@ -1,0 +1,3 @@
+  sku     reason                
+  ------  ----------------------
+  TENT-2  Hold sold-out products
